@@ -1,0 +1,89 @@
+# exploratory: verify checks for REQUEST-007, period 2026-08-01..2026-08-31
+
+## check 1 coverage
+manifest taken_at: 2026-08-28T09:14:00Z
+manifest notes: Covers tickets opened before 2026-08-28.
+
+## check 1 coverage: latest ticket in extract
+-- select max(opened_at) as latest_opened_at, count(*) filter (where opened_at >= DATE '2026-08-01') as august_tickets from staging.tickets
+┌─────────────────────┬────────────────┐
+│  latest_opened_at   │ august_tickets │
+│      timestamp      │     int64      │
+├─────────────────────┼────────────────┤
+│ 2026-08-27 18:57:00 │            418 │
+└─────────────────────┴────────────────┘
+
+
+## check 1 coverage: what staging.extract_metadata claims
+-- select * from staging.extract_metadata
+┌─────────┬──────────────────────┬────────────────┐
+│ source  │     extracted_at     │ source_tickets │
+│ varchar │       varchar        │     int64      │
+├─────────┼──────────────────────┼────────────────┤
+│ ops     │ 2026-10-05T16:37:45Z │           1234 │
+└─────────┴──────────────────────┴────────────────┘
+
+
+## check 3 definition match: columns the v3 numerator and exclusion need
+-- select table_name, column_name from information_schema.columns where table_schema='ops' and column_name in ('human_edit_material','reopened_at','closed_at')
+┌────────────┬─────────────┐
+│ table_name │ column_name │
+│  varchar   │   varchar   │
+└────────────┴─────────────┘
+           0 rows         
+
+
+## check 3 definition match: is_self_served equals was_sent on every row (v2 rule)
+-- select count(*) as rows, count(*) filter (where is_self_served <> was_sent) as rows_where_v2_rule_not_used from staging.suggestions
+┌───────┬─────────────────────────────┐
+│ rows  │ rows_where_v2_rule_not_used │
+│ int64 │            int64            │
+├───────┼─────────────────────────────┤
+│   533 │                           0 │
+└───────┴─────────────────────────────┘
+
+
+## check 4 applicability: non-pilot accounts in August
+-- select s.account_id, s.self_service_rate from marts.self_service s join staging.accounts a using(account_id) where not a.is_pilot and s.month = DATE '2026-08-01' order by 1
+┌──────────────┬───────────────────┐
+│  account_id  │ self_service_rate │
+│   varchar    │      double       │
+├──────────────┼───────────────────┤
+│ ACCOUNT-1005 │               0.0 │
+│ ACCOUNT-1007 │               0.0 │
+│ ACCOUNT-1009 │               0.0 │
+│ ACCOUNT-1010 │               0.0 │
+└──────────────┴───────────────────┘
+
+
+## check 5 denominator: tickets counted vs tickets closed, August
+-- select sum(s.closed_tickets) as mart_denominator, (select count(*) from staging.tickets where month = DATE '2026-08-01' and status='closed') as closed_august, (select count(*) from staging.tickets where month = DATE '2026-08-01' and status<>'closed') as not_closed_august from marts.self_service s where s.month = DATE '2026-08-01'
+┌──────────────────┬───────────────┬───────────────────┐
+│ mart_denominator │ closed_august │ not_closed_august │
+│      int128      │     int64     │       int64       │
+├──────────────────┼───────────────┼───────────────────┤
+│              418 │           408 │                10 │
+└──────────────────┴───────────────┴───────────────────┘
+
+
+## check 6 continuity: July and August per pilot account (v2 mart)
+-- select account_id, month, self_service_rate from marts.self_service s join staging.accounts a using(account_id) where a.is_pilot and month >= DATE '2026-07-01' order by 1,2
+┌──────────────┬─────────────────────┬───────────────────┐
+│  account_id  │        month        │ self_service_rate │
+│   varchar    │      timestamp      │      double       │
+├──────────────┼─────────────────────┼───────────────────┤
+│ ACCOUNT-1001 │ 2026-07-01 00:00:00 │            0.3895 │
+│ ACCOUNT-1001 │ 2026-08-01 00:00:00 │             0.433 │
+│ ACCOUNT-1002 │ 2026-07-01 00:00:00 │               0.4 │
+│ ACCOUNT-1002 │ 2026-08-01 00:00:00 │            0.4231 │
+│ ACCOUNT-1003 │ 2026-07-01 00:00:00 │            0.4026 │
+│ ACCOUNT-1003 │ 2026-08-01 00:00:00 │             0.359 │
+│ ACCOUNT-1004 │ 2026-07-01 00:00:00 │               0.5 │
+│ ACCOUNT-1004 │ 2026-08-01 00:00:00 │            0.2571 │
+│ ACCOUNT-1006 │ 2026-07-01 00:00:00 │            0.3704 │
+│ ACCOUNT-1006 │ 2026-08-01 00:00:00 │            0.2857 │
+│ ACCOUNT-1008 │ 2026-07-01 00:00:00 │            0.3478 │
+│ ACCOUNT-1008 │ 2026-08-01 00:00:00 │            0.4569 │
+└──────────────┴─────────────────────┴───────────────────┘
+  12 rows                                      3 columns
+

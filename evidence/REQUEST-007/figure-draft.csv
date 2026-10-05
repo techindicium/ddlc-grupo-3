@@ -1,0 +1,11 @@
+account_id,period,metric,version_requested,version_implemented_by_mart,value,extract_taken_at,status
+ACCOUNT-1001,2026-08,self_service_rate,not stated,2 (mart logic; definitions file says 3 is current),0.433,2026-08-28T09:14:00Z,"EXPLORATORY DRAFT, NOT FOR PUBLICATION"
+ACCOUNT-1002,2026-08,self_service_rate,not stated,2 (mart logic; definitions file says 3 is current),0.4231,2026-08-28T09:14:00Z,"EXPLORATORY DRAFT, NOT FOR PUBLICATION"
+ACCOUNT-1003,2026-08,self_service_rate,not stated,2 (mart logic; definitions file says 3 is current),0.359,2026-08-28T09:14:00Z,"EXPLORATORY DRAFT, NOT FOR PUBLICATION"
+ACCOUNT-1004,2026-08,self_service_rate,not stated,2 (mart logic; definitions file says 3 is current),0.2571,2026-08-28T09:14:00Z,"EXPLORATORY DRAFT, NOT FOR PUBLICATION"
+ACCOUNT-1005,2026-08,self_service_rate,not stated,2 (mart logic; definitions file says 3 is current),not applicable,2026-08-28T09:14:00Z,"EXPLORATORY DRAFT, NOT FOR PUBLICATION"
+ACCOUNT-1006,2026-08,self_service_rate,not stated,2 (mart logic; definitions file says 3 is current),0.2857,2026-08-28T09:14:00Z,"EXPLORATORY DRAFT, NOT FOR PUBLICATION"
+ACCOUNT-1007,2026-08,self_service_rate,not stated,2 (mart logic; definitions file says 3 is current),not applicable,2026-08-28T09:14:00Z,"EXPLORATORY DRAFT, NOT FOR PUBLICATION"
+ACCOUNT-1008,2026-08,self_service_rate,not stated,2 (mart logic; definitions file says 3 is current),0.4569,2026-08-28T09:14:00Z,"EXPLORATORY DRAFT, NOT FOR PUBLICATION"
+ACCOUNT-1009,2026-08,self_service_rate,not stated,2 (mart logic; definitions file says 3 is current),not applicable,2026-08-28T09:14:00Z,"EXPLORATORY DRAFT, NOT FOR PUBLICATION"
+ACCOUNT-1010,2026-08,self_service_rate,not stated,2 (mart logic; definitions file says 3 is current),not applicable,2026-08-28T09:14:00Z,"EXPLORATORY DRAFT, NOT FOR PUBLICATION"

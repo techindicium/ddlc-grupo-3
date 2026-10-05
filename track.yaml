@@ -1,11 +1,21 @@
 # Complete this file before writing the lifecycle skills.
-group: TODO
-track: TODO # SDLC, DDLC, KDLC, or PDLC
-context_repository: TODO # Local path to the assigned Portwell track repository
-process: TODO
-work_item: TODO
+group: ddlc-grupo-3
+track: DDLC
+context_repository: ../portwell-analytics # techindicium/portwell-analytics, read-only, cloned beside this repo (HEAD a8aecb4, 2026-09-09)
+process: The month's figures are produced
+work_item: REQUEST-007 # Self-service per account for the August packs (Reporting, Lucia Ferreira, due 2026-09-04)
+
+# The thing this lifecycle manages: one requested figure, identified by metric name AND version,
+# for one period and one audience. A figure is publishable only when every one of those is known.
+managed_unit: metric figure request (REQUEST-NNN)
 
 constraints:
   track_repository_access: read-only
   heldout_course_material: prohibited
+  identifiers: reference REQUEST, ACCOUNT, TICKET, POLICY and ISSUE ids as written; never renumber
+  unknown_facts: record as unknown; never estimate a date, owner or version
+  contradictions: report both sources and leave the disagreement open
 
+state_recording:
+  log: state/transitions.md # append-only, one row per transition
+  evidence: evidence/<ITEM>/ # one file per state reached
